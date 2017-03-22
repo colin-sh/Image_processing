@@ -21,6 +21,7 @@ cvReleaseImage(&image);         //
 return 0;
 }
 */
+/*
 #include <opencv\cv.h>
 #include <opencv\highgui.h>
 #include <opencv\cxcore.h>
@@ -76,6 +77,242 @@ int main()
 
 	cvReleaseImage(&inputimage);
 	cvReleaseImage(&sumimage);
+
+	return 0;
+}
+*/
+
+/*
+//명암대비 실습 !!
+#include <opencv\cv.h>
+#include <opencv\highgui.h>
+#include <opencv\cxcore.h>
+
+#define SUM_CONSTANT 50
+
+int main()
+{
+	int i, j;
+	// GRAY SCALE로 바꾸기
+	IplImage *inputimage = cvLoadImage("lena.jpg", CV_LOAD_IMAGE_GRAYSCALE);
+	IplImage *outputimage = cvCreateImage(cvGetSize(inputimage), inputimage->depth, inputimage->nChannels);
+
+	// Color를 바꾸기 위한 변수
+	CvScalar pixelValue, temp;
+
+	// 각 픽셀마다 색 바꾸기 
+	for (i = 0; i < inputimage->height; i++) {
+		for (j = 0; j < inputimage->width; j++) {
+			pixelValue = cvGet2D(inputimage, i, j);
+			temp.val[0] = 255 - pixelValue.val[0];
+			cvSet2D(outputimage, i, j, temp);
+		}
+	}
+
+	// 이건 전체 사진 픽셀 모두 바꾸는거임.
+	//cvSet(sumimage, cvScalar(200,0,0)); ==> Blue  
+	//cvSet(sumimage, CV_RGB(200,0,0));   ==> Red  색깔로 댐
+
+	// 영상을 표시할 윈도우 하나 만들기 --> 없어도 되는데???
+	cvNamedWindow("input image", CV_WINDOW_AUTOSIZE);
+	cvNamedWindow("output image", CV_WINDOW_AUTOSIZE);
+
+	// 이미지 띄어주기
+	cvShowImage("input image", inputimage);
+	cvShowImage("output image", outputimage);
+
+	cvDestroyWindow("inputImage");
+	cvDestroyWindow("outputimage");
+
+	cvWaitKey(0);
+
+	cvDestroyWindow("input image");
+	cvDestroyWindow("output image");
+
+	cvReleaseImage(&inputimage);
+	cvReleaseImage(&outputimage);
+
+	return 0;
+}
+*/
+
+/*
+//감마보정 실습 !!
+#include <opencv\cv.h>
+#include <opencv\highgui.h>
+#include <opencv\cxcore.h>
+
+#define SUM_CONSTANT 50
+
+int main()
+{
+	int i, j;
+	// GRAY SCALE로 바꾸기
+	IplImage *inputimage = cvLoadImage("lena.jpg", CV_LOAD_IMAGE_GRAYSCALE);
+	IplImage *outputimage = cvCreateImage(cvGetSize(inputimage), inputimage->depth, inputimage->nChannels);
+
+	// Color를 바꾸기 위한 변수
+	CvScalar pixelValue, temp;
+
+	for (i = 0; i < inputimage->height; i++) {
+		for (j = 0; j < inputimage->width; j++) {
+			pixelValue = cvGet2D(inputimage, i, j);
+			temp.val[0] = pow(pixelValue.val[0], 1 / GAMMA_CONSTANT);
+			if (temp.val[0] < 0) {
+				temp.val[0] = 0;
+				cvSet2D(outputimage, i, j, temp);
+			}
+			else if (temp.val[0] > 255) {
+				temp.val[0] = 255;
+				cvSet2D(outputimage, i, j, temp);
+			}
+			else {
+				cvSet2D(outputimage, i, j, temp);
+			}
+		}
+	}
+
+	// 이건 전체 사진 픽셀 모두 바꾸는거임.
+	//cvSet(sumimage, cvScalar(200,0,0)); ==> Blue  
+	//cvSet(sumimage, CV_RGB(200,0,0));   ==> Red  색깔로 댐
+
+	// 영상을 표시할 윈도우 하나 만들기 --> 없어도 되는데???
+	cvNamedWindow("input image", CV_WINDOW_AUTOSIZE);
+	cvNamedWindow("output image", CV_WINDOW_AUTOSIZE);
+
+	// 이미지 띄어주기
+	cvShowImage("input image", inputimage);
+	cvShowImage("output image", outputimage);
+
+	cvDestroyWindow("inputImage");
+	cvDestroyWindow("outputimage");
+
+	cvWaitKey(0);
+
+	cvDestroyWindow("input image");
+	cvDestroyWindow("output image");
+
+	cvReleaseImage(&inputimage);
+	cvReleaseImage(&outputimage);
+
+	return 0;
+}
+*/
+
+/*
+//이진화 실습 !!
+#include <opencv\cv.h>
+#include <opencv\highgui.h>
+#include <opencv\cxcore.h>
+
+#define BINARY_THRESHOLD 130
+
+int main()
+{
+	int i, j;
+	// GRAY SCALE로 바꾸기
+	IplImage *inputimage = cvLoadImage("lena.jpg", CV_LOAD_IMAGE_GRAYSCALE);
+	IplImage *outputimage = cvCreateImage(cvGetSize(inputimage), inputimage->depth, inputimage->nChannels);
+
+	// Color를 바꾸기 위한 변수
+	CvScalar pixelValue, temp;
+
+	for (i = 0; i < inputimage->height; i++) {
+		for (j = 0; j < inputimage->width; j++) {
+			pixelValue = cvGet2D(inputimage, i, j);
+			
+			if (pixelValue.val[0] >= BINARY_THRESHOLD) {
+				temp.val[0] = 255;
+				cvSet2D(outputimage, i, j, temp);
+			}
+			else {
+				temp.val[0] = 0;
+				cvSet2D(outputimage, i, j, temp);
+			}
+		}
+	}
+
+	// 이건 전체 사진 픽셀 모두 바꾸는거임.
+	//cvSet(sumimage, cvScalar(200,0,0)); ==> Blue  
+	//cvSet(sumimage, CV_RGB(200,0,0));   ==> Red  색깔로 댐
+
+	// 영상을 표시할 윈도우 하나 만들기 --> 없어도 되는데???
+	cvNamedWindow("input image", CV_WINDOW_AUTOSIZE);
+	cvNamedWindow("output image", CV_WINDOW_AUTOSIZE);
+
+	// 이미지 띄어주기
+	cvShowImage("input image", inputimage);
+	cvShowImage("output image", outputimage);
+
+	cvDestroyWindow("inputImage");
+	cvDestroyWindow("outputimage");
+
+	cvWaitKey(0);
+
+	cvDestroyWindow("input image");
+	cvDestroyWindow("output image");
+
+	cvReleaseImage(&inputimage);
+	cvReleaseImage(&outputimage);
+
+	return 0;
+}
+*/
+
+//범위강조 실습!!
+#include <opencv\cv.h>
+#include <opencv\highgui.h>
+#include <opencv\cxcore.h>
+
+#define STRESS_START_POINT 100
+#define STRESS_END_POINT 150
+
+int main()
+{
+	int i, j;
+	// GRAY SCALE로 바꾸기
+	IplImage *inputimage = cvLoadImage("lena.jpg", CV_LOAD_IMAGE_GRAYSCALE);
+	IplImage *outputimage = cvCreateImage(cvGetSize(inputimage), inputimage->depth, inputimage->nChannels);
+
+	// Color를 바꾸기 위한 변수
+	CvScalar pixelValue, temp;
+
+	for (i = 0; i < inputimage->height; i++) {
+		for (j = 0; j < inputimage->width; j++) {
+			pixelValue = cvGet2D(inputimage, i, j);
+
+			if (pixelValue.val[0] >= STRESS_START_POINT && pixelValue.val[0] <= STRESS_END_POINT) {
+				temp.val[0] = 255;
+				cvSet2D(outputimage, i, j, temp);
+			}
+			else {
+				cvSet2D(outputimage, i, j, pixelValue);
+			}
+		}
+	}
+
+	// 이건 전체 사진 픽셀 모두 바꾸는거임.
+	//cvSet(sumimage, cvScalar(200,0,0)); ==> Blue  
+	//cvSet(sumimage, CV_RGB(200,0,0));   ==> Red  색깔로 댐
+
+	// 영상을 표시할 윈도우 하나 만들기 --> 없어도 되는데???
+	cvNamedWindow("input image", CV_WINDOW_AUTOSIZE);
+	cvNamedWindow("output image", CV_WINDOW_AUTOSIZE);
+
+	// 이미지 띄어주기
+	cvShowImage("input image", inputimage);
+	cvShowImage("output image", outputimage);
+
+	cvDestroyWindow("inputImage");
+	cvDestroyWindow("outputimage");
+
+	cvWaitKey(0);
+
+	cvDestroyWindow("input image");
+	cvDestroyWindow("output image");
+
+	cvReleaseImage(&inputimage);
+	cvReleaseImage(&outputimage);
 
 	return 0;
 }
