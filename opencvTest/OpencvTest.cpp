@@ -21,6 +21,7 @@ cvReleaseImage(&image);         //
 return 0;
 }
 */
+
 /*
 #include <opencv\cv.h>
 #include <opencv\highgui.h>
@@ -259,6 +260,7 @@ int main()
 }
 */
 
+/*
 //범위강조 실습!!
 #include <opencv\cv.h>
 #include <opencv\highgui.h>
@@ -316,3 +318,4 @@ int main()
 
 	return 0;
 }
+*/
