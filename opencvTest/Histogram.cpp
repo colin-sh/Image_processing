@@ -148,7 +148,7 @@ int main()
 }
 */
 
-
+/*
 //¾Øµå-ÀÎ Å½»ö
 #include <opencv\cv.h>
 #include <opencv\highgui.h>
@@ -265,3 +265,4 @@ void Show_histogram(IplImage *img, char *imgWindowName, char * histogramWindowNa
 	cvShowImage(histogramWindowName, histogramImage);
 
 }
+*/
