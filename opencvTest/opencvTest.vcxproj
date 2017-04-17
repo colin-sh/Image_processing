@@ -142,6 +142,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="EdgeFInding.cpp" />
     <ClCompile Include="Histogram.cpp" />
     <ClCompile Include="OpencvTest.cpp" />
     <ClCompile Include="PixelAreaProcessing.cpp" />

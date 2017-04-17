@@ -287,7 +287,7 @@ int main()
 
 }
 */
-
+/*
 //저주파 통과 필터 처리
 #include <opencv\cv.h>
 #include <opencv\highgui.h>
@@ -361,4 +361,100 @@ int main()
 	cvReleaseImage(&resultImage_2);
 	cvReleaseImage(&inputImage);
 
+}
+*/
+/*
+//로버츠 코드
+#include <opencv\cv.h>
+#include <opencv\highgui.h>
+
+IplImage *ConvolutionProcess(IplImage *inputImage, double Mask[3][3]) {
+	IplImage *tempinputImage = cvCreateImage(cvSize(inputImage->width + 2, inputImage->height + 2), IPL_DEPTH_8U, 1);
+	IplImage *outputImage = cvCreateImage(cvGetSize(inputImage), IPL_DEPTH_8U, 1);
+	// IPL_DEPTH_8U - 8 비트로 RGB DEPTH 표현
+
+	int i, j, n, m;
+	double sum = 0.0;
+	CvScalar tempScalar;
+
+	cvSetZero(tempinputImage); // 없어도 되던데??
+
+	for (i = 0; i < inputImage->height; i++) {
+		for (j = 0; j < inputImage->width; j++)
+			cvSet2D(tempinputImage, i + 1, j + 1, cvGet2D(inputImage, i, j));
+	}
+
+	for (i = 0; i < inputImage->height; i++) {
+		for (j = 0; j < inputImage->width; j++) {
+			for (n = 0; n < 3; n++) {                       // Mask와 연산하기
+				for (m = 0; m < 3; m++) {
+					tempScalar = cvGet2D(tempinputImage, i + n, j + m);
+					sum += Mask[n][m] * tempScalar.val[0];
+				}
+			}
+			cvSet2D(outputImage, i, j, cvScalar(sum)); // 128 더하면 엠보싱
+			sum = 0.0;
+		}
+	}
+
+	cvReleaseImage(&tempinputImage);
+	return outputImage;
+}
+
+int main() {
+	IplImage *inputImage = cvLoadImage("lena.jpg", CV_LOAD_IMAGE_GRAYSCALE);
+	IplImage *sumImage = cvCreateImage(cvGetSize(inputImage), inputImage->depth, inputImage->nChannels);
+	IplImage *rowImage = NULL;
+	IplImage *colImage = NULL;
+
+	double rowMask[3][3] = { { -1,0,0 },{ 0,1,0 },{ 0,0,0 } };
+	double colMask[3][3] = { { 0,0,-1 },{ 0,1,0 },{ 0,0,0 } };
+
+	int i, j;
+	CvScalar horizontemp, vertical;
+
+	rowImage = ConvolutionProcess(inputImage, rowMask);
+	colImage = ConvolutionProcess(inputImage, colMask);
+
+	cvOr(rowImage, colImage, sumImage);
+
+	cvShowImage("input Image", inputImage);
+	cvShowImage("Result Image", rowImage);
+	cvShowImage("Result Image2", colImage);
+	cvShowImage("sumImage", sumImage);
+
+	cvWaitKey();
+
+	cvDestroyAllWindows();
+	cvReleaseImage(&sumImage);
+	cvReleaseImage(&rowImage);
+	cvReleaseImage(&colImage);
+	cvReleaseImage(&inputImage);
+
+}
+*/
+
+//캐니 에지 검출
+#include <opencv\cv.h>
+#include <opencv\highgui.h>
+
+#define LOW_THRESHOLD 30
+#define HIGH_THRESHOLD 30*2.5
+
+int main()
+{
+	IplImage *inputImage = cvLoadImage("lena.jpg", CV_LOAD_IMAGE_GRAYSCALE);
+	IplImage *cannyImage_1 = cvCreateImage(cvGetSize(inputImage), inputImage->depth, inputImage->nChannels);
+
+	cvCanny(inputImage, cannyImage_1, LOW_THRESHOLD, HIGH_THRESHOLD);
+
+
+	cvShowImage("input Image", inputImage);
+	cvShowImage("Result Image", cannyImage_1);
+
+	cvWaitKey();
+
+	cvDestroyAllWindows();
+	cvReleaseImage(&cannyImage_1);
+	cvReleaseImage(&inputImage);
 }
