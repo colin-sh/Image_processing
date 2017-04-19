@@ -433,7 +433,7 @@ int main() {
 
 }
 */
-
+/*
 //캐니 에지 검출
 #include <opencv\cv.h>
 #include <opencv\highgui.h>
@@ -458,3 +458,4 @@ int main()
 	cvReleaseImage(&cannyImage_1);
 	cvReleaseImage(&inputImage);
 }
+*/
