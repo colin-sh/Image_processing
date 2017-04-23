@@ -30,5 +30,8 @@
     <ClCompile Include="Geometric.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Midterm.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

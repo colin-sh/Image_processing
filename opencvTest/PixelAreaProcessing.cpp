@@ -369,7 +369,7 @@ int main()
 #include <opencv\highgui.h>
 
 IplImage *ConvolutionProcess(IplImage *inputImage, double Mask[3][3]) {
-	IplImage *tempinputImage = cvCreateImage(cvSize(inputImage->width + 2, inputImage->height + 2), IPL_DEPTH_8U, 1);
+	IplImage *tempinputImage = cvCreateImage(cvSize(inputImage->width + 2, inputImage->height + 2), IPL_DEPTH_8U, 1); // 3X3은 +2, 5X5는 +4
 	IplImage *outputImage = cvCreateImage(cvGetSize(inputImage), IPL_DEPTH_8U, 1);
 	// IPL_DEPTH_8U - 8 비트로 RGB DEPTH 표현
 
